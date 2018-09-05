@@ -1,11 +1,5 @@
-// Import MySQL connection.
 var connection = require("../config/connection.js");
 
-// Helper function for SQL syntax.
-// Let's say we want to pass 3 values into the mySQL query.
-// In order to write the query, we need 3 question marks.
-// The above helper function loops through and creates an array of question marks - ["?", "?", "?"] - and turns it into a string.
-// ["?", "?", "?"].toString() => "?,?,?";
 function printQuestionMarks(num) {
   var arr = [];
 
@@ -39,13 +33,10 @@ function objToSql(ob) {
   return arr.toString();
 }
 
-// Object for all our SQL statement functions.
 var orm = {
   selectAll: function(tableInput, cb) {
-  // Construct the query string that returns all rows from the target table
   var queryString = "SELECT * FROM " + tableInput + ";";
 
-  // Perform the database query
   connection.query(queryString, function(err, result) {
     if (err) {
       throw err;
@@ -66,20 +57,16 @@ insertOne: function(table, cols, vals, cb) {
   queryString += printQuestionMarks(vals.length);
   queryString += ") ";
 
-  // console.log(queryString);
 
-  // Perform the database query
   connection.query(queryString, vals, function(err, result) {
     if (err) {
       throw err;
     }
 
-    // Return results in callback
     cb(result);
   });
 },
 updateOne: function(table, objColVals, condition, cb) {
-  // Construct the query string that updates a single entry in the target table
   var queryString = "UPDATE " + table;
 
   queryString += " SET ";
@@ -87,19 +74,15 @@ updateOne: function(table, objColVals, condition, cb) {
   queryString += " WHERE ";
   queryString += condition;
 
-  // console.log(queryString);
 
-  // Perform the database query
   connection.query(queryString, function(err, result) {
     if (err) {
       throw err;
     }
 
-    // Return results in callback
     cb(result);
   });
 }
 };
 
-// Export the orm object for the model (cat.js).
 module.exports = orm;
